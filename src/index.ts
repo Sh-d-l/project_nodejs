@@ -133,7 +133,6 @@ app.post('/videos', (req,res) => {
 /*------------------------------GET ALL VIDEOS-----------------------------*/
 
 app.get ('/videos', (req, res) => {
-
     res.status(200).send(videos)
 })
 
@@ -155,27 +154,27 @@ app.get ('/videos/:id', (req,res) => {
 app.put ('/videos/:id', (req,res) => {
     let filterResolutions = req.body.availableResolutions.filter((el:string) =>  arrResolutionVideo.includes(el))
 
-    /*if (typeof req.body.title === "string" && typeof req.body.author === "string"
+    if (typeof req.body.title === "string" && typeof req.body.author === "string"
         && (req.body.title).length <= 40 && (req.body.author).length <= 20 && filterResolutions.length === (req.body.availableResolutions).length &&
         req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof
-        req.body.publicationDate !== "string") {*/
+        req.body.publicationDate !== "string") {
         for (let obj of videos) {
             if (obj.id === +req.params.id) {
-                    obj.title = req.body.title;
-                    obj.author = req.body.author;
-                    obj.availableResolutions = req.body.availableResolutions;
-                    obj.canBeDownloaded = true;
-                    obj.minAgeRestriction = 18;
-                    obj.publicationDate = new Date().toISOString();
-                    res.status(204).send(videos)
-                    return;
+                obj.title = req.body.title;
+                obj.author = req.body.author;
+                obj.availableResolutions = req.body.availableResolutions;
+                obj.canBeDownloaded = true;
+                obj.minAgeRestriction = 18;
+                obj.publicationDate = new Date().toISOString();
+                res.status(204).send(videos)
+                return;
             }
-            }
-            res.sendStatus(404)
-            return;
-
-
+        }
+        res.sendStatus(404)
+        return;
     }
+
+
 
     if(typeof req.body.title !== "string" || (req.body.title).length >  40) {
         err.errorsMessages[0].message = "title must be a string or length < 40"
@@ -206,6 +205,10 @@ app.put ('/videos/:id', (req,res) => {
     }
     if(resCheckErr.length > 0) {
         res.status(400).send(resCheckErr)
+        return;
+    }
+    else {
+        res.sendStatus(404)
         return;
     }
 })
