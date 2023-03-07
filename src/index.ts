@@ -133,6 +133,7 @@ app.post('/videos', (req,res) => {
 /*------------------------------GET ALL VIDEOS-----------------------------*/
 
 app.get ('/videos', (req, res) => {
+
     res.status(200).send(videos)
 })
 
@@ -154,10 +155,10 @@ app.get ('/videos/:id', (req,res) => {
 app.put ('/videos/:id', (req,res) => {
     let filterResolutions = req.body.availableResolutions.filter((el:string) =>  arrResolutionVideo.includes(el))
 
-    if (typeof req.body.title === "string" && typeof req.body.author === "string"
+    /*if (typeof req.body.title === "string" && typeof req.body.author === "string"
         && (req.body.title).length <= 40 && (req.body.author).length <= 20 && filterResolutions.length === (req.body.availableResolutions).length &&
         req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof
-        req.body.publicationDate !== "string") {
+        req.body.publicationDate !== "string") {*/
         for (let obj of videos) {
             if (obj.id === +req.params.id) {
                     obj.title = req.body.title;
@@ -166,13 +167,14 @@ app.put ('/videos/:id', (req,res) => {
                     obj.canBeDownloaded = true;
                     obj.minAgeRestriction = 18;
                     obj.publicationDate = new Date().toISOString();
-            } else {
-                res.sendStatus(404)
-                return;
+                    res.status(204).send(videos)
+                    return;
             }
-        }
-        res.status(204).send(videos)
-        return;
+            }
+            res.sendStatus(404)
+            return;
+
+
     }
 
     if(typeof req.body.title !== "string" || (req.body.title).length >  40) {
@@ -227,7 +229,13 @@ app.delete('/videos/:id', (req, res) => {
 
 app.delete('/videos/', (req,res) => {
     videos.splice(0,videos.length);
-    res.sendStatus(204)
+    if(videos.length === 0) {
+        res.sendStatus(204)
+    }
+    else {
+        res.sendStatus(404)
+    }
+
 })
 
 

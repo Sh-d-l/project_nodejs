@@ -128,56 +128,54 @@ app.get('/videos/:id', (req, res) => {
 /*------------------------------PUT----------------------------------------------------*/
 app.put('/videos/:id', (req, res) => {
     let filterResolutions = req.body.availableResolutions.filter((el) => arrResolutionVideo.includes(el));
-    if (typeof req.body.title === "string" && typeof req.body.author === "string"
+    /*if (typeof req.body.title === "string" && typeof req.body.author === "string"
         && (req.body.title).length <= 40 && (req.body.author).length <= 20 && filterResolutions.length === (req.body.availableResolutions).length &&
-        req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof req.body.publicationDate !== "string") {
-        for (let obj of videos) {
-            if (obj.id === +req.params.id) {
-                obj.title = req.body.title;
-                obj.author = req.body.author;
-                obj.availableResolutions = req.body.availableResolutions;
-                obj.canBeDownloaded = true;
-                obj.minAgeRestriction = 18;
-                obj.publicationDate = new Date().toISOString();
-            }
-            else {
-                res.sendStatus(404);
-                return;
-            }
+        req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof
+        req.body.publicationDate !== "string") {*/
+    for (let obj of videos) {
+        if (obj.id === +req.params.id) {
+            obj.title = req.body.title;
+            obj.author = req.body.author;
+            obj.availableResolutions = req.body.availableResolutions;
+            obj.canBeDownloaded = true;
+            obj.minAgeRestriction = 18;
+            obj.publicationDate = new Date().toISOString();
+            res.status(204).send(videos);
+            return;
         }
-        res.status(204).send(videos);
-        return;
     }
-    if (typeof req.body.title !== "string" || (req.body.title).length > 40) {
-        err.errorsMessages[0].message = "title must be a string or length < 40";
-        err.errorsMessages[0].field = "title";
-        resCheckErr.push(err);
-    }
-    if (typeof req.body.author !== "string" || (req.body.author).length > 20) {
-        err.errorsMessages[0].message = "author must be a string or length < 20";
-        err.errorsMessages[0].field = "author";
-        resCheckErr.push(err);
-    }
-    if (filterResolutions.length !== (req.body.availableResolutions).length) {
-        err.errorsMessages[0].message = "incorrect resolutions";
-        err.errorsMessages[0].field = "availableResolutions";
-        resCheckErr.push(err);
-    }
-    if (typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
-        err.errorsMessages[0].message = "minAgeRestriction must have a number type and 1 < minAgeRestriction < 18";
-        err.errorsMessages[0].field = "minAgeRestriction";
-        resCheckErr.push(err);
-    }
-    if (typeof req.body.publicationDate !== "string") {
-        err.errorsMessages[0].message = "publicationDate must have a string";
-        err.errorsMessages[0].field = "publicationDate";
-        resCheckErr.push(err);
-    }
-    if (resCheckErr.length > 0) {
-        res.status(400).send(resCheckErr);
-        return;
-    }
+    res.sendStatus(404);
+    return;
 });
+if (typeof req.body.title !== "string" || (req.body.title).length > 40) {
+    err.errorsMessages[0].message = "title must be a string or length < 40";
+    err.errorsMessages[0].field = "title";
+    resCheckErr.push(err);
+}
+if (typeof req.body.author !== "string" || (req.body.author).length > 20) {
+    err.errorsMessages[0].message = "author must be a string or length < 20";
+    err.errorsMessages[0].field = "author";
+    resCheckErr.push(err);
+}
+if (filterResolutions.length !== (req.body.availableResolutions).length) {
+    err.errorsMessages[0].message = "incorrect resolutions";
+    err.errorsMessages[0].field = "availableResolutions";
+    resCheckErr.push(err);
+}
+if (typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
+    err.errorsMessages[0].message = "minAgeRestriction must have a number type and 1 < minAgeRestriction < 18";
+    err.errorsMessages[0].field = "minAgeRestriction";
+    resCheckErr.push(err);
+}
+if (typeof req.body.publicationDate !== "string") {
+    err.errorsMessages[0].message = "publicationDate must have a string";
+    err.errorsMessages[0].field = "publicationDate";
+    resCheckErr.push(err);
+}
+if (resCheckErr.length > 0) {
+    res.status(400).send(resCheckErr);
+    return;
+}
 /*-----------------------------DELETE ID-------------------------------------------------*/
 app.delete('/videos/:id', (req, res) => {
     for (let i = 0; i <= videos.length; i++) {
@@ -193,7 +191,12 @@ app.delete('/videos/:id', (req, res) => {
 /*-----------------------------DELETE ALL------------------------------------------------*/
 app.delete('/videos/', (req, res) => {
     videos.splice(0, videos.length);
-    res.sendStatus(204);
+    if (videos.length === 0) {
+        res.sendStatus(204);
+    }
+    else {
+        res.sendStatus(404);
+    }
 });
 /*----------------------------------------------------------------------------------------*/
 app.listen(port, () => {
