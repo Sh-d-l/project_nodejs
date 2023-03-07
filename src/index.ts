@@ -1,6 +1,5 @@
 import express from 'express';
 import {addDays} from 'date-fns';
-import {isNumber} from "util";
 const app = express()
 app.use(express.json())
 const port = 3000
@@ -64,11 +63,11 @@ app.post('/videos', (req,res) => {
         resCheckErr.push(err)
     }
 
-    /*if (typeof req.body.title !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
+    if (typeof req.body.title !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
         err.errorsMessages[0].message = "title must be a string and incorrect resolution"
         err.errorsMessages[0].field = "title & availableResolutions"
         resCheckErr.push(err)
-    }*/
+    }
     if (typeof req.body.author !== 'string' || (req.body.author).length > 20) {
         err.errorsMessages[0].message = "author must be a string or length > 20 "
         err.errorsMessages[0].field = "author "
@@ -79,7 +78,7 @@ app.post('/videos', (req,res) => {
         err.errorsMessages[0].field = "availableResolutions"
         resCheckErr.push(err)
     }
-    /*if (typeof req.body.author !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
+    if (typeof req.body.author !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
         err.errorsMessages[0].message = "author must be a string and incorrect resolution"
         err.errorsMessages[0].field = "author & availableResolutions"
         resCheckErr.push(err)
@@ -123,7 +122,7 @@ app.post('/videos', (req,res) => {
         err.errorsMessages[0].message = "author > 20 characters and incorrect resolution"
         err.errorsMessages[0].field = "author & availableResolutions"
         resCheckErr.push(err)
-    }*/
+    }
     if (resCheckErr.length > 0) {
         res.status(404).send(resCheckErr)
         resCheckErr = [];
@@ -161,12 +160,12 @@ app.put ('/videos/:id', (req,res) => {
         req.body.publicationDate !== "string") {
         for (let obj of videos) {
             if (obj.id === +req.params.id) {
-                    obj.title = req.body.title,
-                    obj.author = req.body.author,
-                    obj.availableResolutions = req.body.availableResolutions,
-                    obj.canBeDownloaded = true,
-                    obj.minAgeRestriction = 18,
-                    obj.publicationDate = new Date().toISOString()
+                    obj.title = req.body.title;
+                    obj.author = req.body.author;
+                    obj.availableResolutions = req.body.availableResolutions;
+                    obj.canBeDownloaded = true;
+                    obj.minAgeRestriction = 18;
+                    obj.publicationDate = new Date().toISOString();
             } else {
                 res.sendStatus(404)
                 return;
@@ -181,7 +180,7 @@ app.put ('/videos/:id', (req,res) => {
         err.errorsMessages[0].field = "title"
         resCheckErr.push(err)
     }
-    if (typeof req.body.author === "string" || (req.body.author).length > 20) {
+    if (typeof req.body.author !== "string" || (req.body.author).length > 20) {
         err.errorsMessages[0].message = "author must be a string or length < 20"
         err.errorsMessages[0].field = "author"
         resCheckErr.push(err)
@@ -209,9 +208,10 @@ app.put ('/videos/:id', (req,res) => {
     }
 })
 
-/*-----------------------------DELETE--------------------------------------------------*/
+/*-----------------------------DELETE ID-------------------------------------------------*/
+
 app.delete('/videos/:id', (req, res) => {
-    let deleteId = videos.filter((p,i)  => p.id === +req.params.id)
+    let deleteId = videos.filter((p)  => p.id === +req.params.id)
     if(deleteId) {
         res.sendStatus(204)
         return;
@@ -222,9 +222,14 @@ app.delete('/videos/:id', (req, res) => {
     }
 })
 
+/*-----------------------------DELETE ALL------------------------------------------------*/
 
-/*---------------------------------------------------------------------------------------*/
+app.delete('/videos/', (req,res) => {
+    res.sendStatus(204)
+})
 
+
+/*----------------------------------------------------------------------------------------*/
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
