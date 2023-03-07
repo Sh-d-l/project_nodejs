@@ -180,17 +180,15 @@ app.put('/videos/:id', (req, res) => {
 });
 /*-----------------------------DELETE ID-------------------------------------------------*/
 app.delete('/videos/:id', (req, res) => {
-    for (let i = 0; i < videos.length; i++) {
+    for (let i = 0; i <= videos.length; i++) {
         if (videos[i].id === +req.params.id) {
             videos.splice(i, 1);
             res.sendStatus(204);
             return;
         }
-        else {
-            res.sendStatus(404);
-            return;
-        }
     }
+    res.sendStatus(404);
+    return;
 });
 /*-----------------------------DELETE ALL------------------------------------------------*/
 app.delete('/videos/', (req, res) => {
