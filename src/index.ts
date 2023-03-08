@@ -41,7 +41,8 @@ app.post('/videos', (req,res) => {
 
     let filterPostResolutions: string[] = req.body.availableResolutions.filter((p:string) => arrResolutionVideo.includes(p))
 
-    if (typeof req.body.title == "string" && typeof req.body.author == "string"
+    if (typeof req.body.title == "string" && typeof req.body.title !== null && typeof req.body.author == "string"
+        && typeof req.body.author !== null
         && (req.body.title).length <= 40 && (req.body.author).length <= 20
         && filterPostResolutions.length == (req.body.availableResolutions).length) {
         const newVideo:VideoType = {

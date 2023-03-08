@@ -23,7 +23,8 @@ const err = {
 app.post('/videos', (req, res) => {
     const time = new Date();
     let filterPostResolutions = req.body.availableResolutions.filter((p) => arrResolutionVideo.includes(p));
-    if (typeof req.body.title == "string" && typeof req.body.author == "string"
+    if (typeof req.body.title == "string" && typeof req.body.title !== null && typeof req.body.author == "string"
+        && typeof req.body.author !== null
         && (req.body.title).length <= 40 && (req.body.author).length <= 20
         && filterPostResolutions.length == (req.body.availableResolutions).length) {
         const newVideo = {
