@@ -216,16 +216,16 @@ app.put ('/videos/:id', (req,res) => {
 /*-----------------------------DELETE ID-------------------------------------------------*/
 
 app.delete('/videos/:id', (req, res) => {
-    for (let i = 0; i <= videos.length; i++) {
-        if(videos[i].id === +req.params.id) {
-            videos.splice(i,1)
-            res.sendStatus(204)
-            return;
-        }
-}
+    let deleteId = videos.filter((elem) => elem.id === +req.params.id);
+    if(deleteId.length > 0) {
+        videos.splice(videos.indexOf(deleteId[0]),1)
+        res.sendStatus(204)
+        return;
+    }
+    else {
         res.sendStatus(404)
         return;
-
+    }
 })
 
 /*-----------------------------DELETE ALL------------------------------------------------*/
@@ -240,7 +240,6 @@ app.delete('/videos/', (req,res) => {
     }
 
 })
-
 
 /*----------------------------------------------------------------------------------------*/
 app.listen(port, () => {
