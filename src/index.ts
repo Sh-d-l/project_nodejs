@@ -124,7 +124,7 @@ app.post('/videos', (req,res) => {
         resCheckErr.push(err)
     }
     if (resCheckErr.length > 0) {
-        res.status(404).send(resCheckErr)
+        res.status(400).send(resCheckErr)
         resCheckErr = [];
         return;
     }
