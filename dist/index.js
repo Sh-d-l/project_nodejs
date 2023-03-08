@@ -161,6 +161,11 @@ app.put('/videos/:id', (req, res) => {
         err.errorsMessages[0].field = "availableResolutions";
         resCheckErr.push(err);
     }
+    if (req.body.canBeDownloaded !== true) {
+        err.errorsMessages[0].message = "canBeDownloaded not true";
+        err.errorsMessages[0].field = "canBeDownloaded";
+        resCheckErr.push(err);
+    }
     if (typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
         err.errorsMessages[0].message = "minAgeRestriction must have a number type and 1 < minAgeRestriction < 18";
         err.errorsMessages[0].field = "minAgeRestriction";
