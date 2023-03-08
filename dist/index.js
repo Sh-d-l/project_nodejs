@@ -39,7 +39,7 @@ app.post('/videos', (req, res) => {
         videos.push(newVideo);
         res.status(201).send(newVideo);
     }
-    if (typeof req.body.title !== 'string' || (req.body.title).length > 40 || typeof req.body.title !== null) {
+    if (typeof req.body.title !== 'string' || (req.body.title).length > 40 || typeof req.body.title == null) {
         err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null";
         err.errorsMessages[0].field = "title";
         resCheckErr.push(err);
@@ -49,7 +49,7 @@ app.post('/videos', (req, res) => {
         err.errorsMessages[0].field = "title & availableResolutions";
         resCheckErr.push(err);
     }
-    if (typeof req.body.author !== 'string' || (req.body.author).length > 20 || typeof req.body.author !== null) {
+    if (typeof req.body.author !== 'string' || (req.body.author).length > 20 || typeof req.body.author == null) {
         err.errorsMessages[0].message = "author must be a string or length > 20 or null ";
         err.errorsMessages[0].field = "author ";
         resCheckErr.push(err);
