@@ -230,7 +230,7 @@ app.delete('/videos/:id', (req, res) => {
 
 /*-----------------------------DELETE ALL------------------------------------------------*/
 
-app.delete('/videos/', (req,res) => {
+app.delete('/all-data', (req,res) => {
     videos.splice(0,videos.length);
     if(videos.length === 0) {
         res.sendStatus(204)
