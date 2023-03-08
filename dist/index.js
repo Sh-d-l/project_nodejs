@@ -45,6 +45,11 @@ app.post('/videos', (req, res) => {
             res.sendStatus(404);
         }
     }
+    if (typeof req.body.title === null) {
+        err.errorsMessages[0].message = "title  null";
+        err.errorsMessages[0].field = "title";
+        resCheckErr.push(err);
+    }
     if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40) || typeof req.body.title === null) {
         err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null";
         err.errorsMessages[0].field = "title";
@@ -80,36 +85,36 @@ app.post('/videos', (req, res) => {
         err.errorsMessages[0].field = "title & author & availableResolutions";
         resCheckErr.push(err);
     }
-    if ((req.body.title).length > 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "more than 40 characters in title";
-        err.errorsMessages[0].field = "title";
-        resCheckErr.push(err);
-    }
-    if ((req.body.title).length <= 40 && (req.body.author).length > 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "more than 20 characters in author";
-        err.errorsMessages[0].field = "author";
-        resCheckErr.push(err);
+    /*if ((req.body.title).length > 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
+        err.errorsMessages[0].message = "more than 40 characters in title"
+        err.errorsMessages[0].field = "title"
+        resCheckErr.push(err)
+    }*/
+    /*if ((req.body.title).length <= 40 && (req.body.author).length > 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
+        err.errorsMessages[0].message = "more than 20 characters in author"
+        err.errorsMessages[0].field = "author"
+        resCheckErr.push(err)
     }
     if ((req.body.title).length <= 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "incorrect resolution";
-        err.errorsMessages[0].field = "availableResolutions";
-        resCheckErr.push(err);
+        err.errorsMessages[0].message = "incorrect resolution"
+        err.errorsMessages[0].field = "availableResolutions"
+        resCheckErr.push(err)
     }
-    if ((req.body.title).length > 40 && (req.body.author).length > 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title > 40 characters and author > 20 characters";
-        err.errorsMessages[0].field = "title & author";
-        resCheckErr.push(err);
+    if ((req.body.title).length > 40 && (req.body.author).length >20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
+        err.errorsMessages[0].message = "title > 40 characters and author > 20 characters"
+        err.errorsMessages[0].field = "title & author"
+        resCheckErr.push(err)
     }
     if ((req.body.title).length > 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title > 40 characters and incorrect resolution";
-        err.errorsMessages[0].field = "title & availableResolutions";
-        resCheckErr.push(err);
+        err.errorsMessages[0].message = "title > 40 characters and incorrect resolution"
+        err.errorsMessages[0].field = "title & availableResolutions"
+        resCheckErr.push(err)
     }
     if ((req.body.title).length <= 40 && (req.body.author).length > 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "author > 20 characters and incorrect resolution";
-        err.errorsMessages[0].field = "author & availableResolutions";
-        resCheckErr.push(err);
-    }
+        err.errorsMessages[0].message = "author > 20 characters and incorrect resolution"
+        err.errorsMessages[0].field = "author & availableResolutions"
+        resCheckErr.push(err)
+    }*/
     if (resCheckErr.length > 0) {
         res.status(400).send(resCheckErr);
         resCheckErr = [];
