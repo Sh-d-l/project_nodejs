@@ -11,11 +11,10 @@ const port = 3000;
 const videos = [];
 const arrResolutionVideo = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
 let resCheckErr = [];
-const err = {
-    "errorsMessages": [
-        {
+let err = {
+    "errorsMessages": [{
             "message": "string",
-            "field": "string"
+            "field": "string",
         }
     ]
 };
@@ -23,8 +22,8 @@ const err = {
 app.post('/videos', (req, res) => {
     const time = new Date();
     let filterPostResolutions = req.body.availableResolutions.filter((p) => arrResolutionVideo.includes(p));
-    if (typeof req.body.title == "string" && typeof req.body.title !== null && typeof req.body.author == "string"
-        && typeof req.body.author !== null
+    if ((typeof req.body.title == "string" && typeof req.body.title !== null) && (typeof req.body.author == "string"
+        && typeof req.body.author !== null)
         && (req.body.title).length <= 40 && (req.body.author).length <= 20
         && filterPostResolutions.length == (req.body.availableResolutions).length) {
         const newVideo = {
@@ -45,22 +44,12 @@ app.post('/videos', (req, res) => {
             res.sendStatus(404);
         }
     }
-    if (typeof req.body.title === null) {
-        err.errorsMessages[0].message = "title  null";
-        err.errorsMessages[0].field = "title";
-        resCheckErr.push(err);
-    }
-    if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40) || typeof req.body.title === null) {
+    if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40)) {
         err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null";
         err.errorsMessages[0].field = "title";
         resCheckErr.push(err);
     }
-    if (typeof req.body.title !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title must be a string and incorrect resolution";
-        err.errorsMessages[0].field = "title & availableResolutions";
-        resCheckErr.push(err);
-    }
-    if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20) || typeof req.body.author === null) {
+    if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
         err.errorsMessages[0].message = "author must be a string or length > 20 or null ";
         err.errorsMessages[0].field = "author ";
         resCheckErr.push(err);
@@ -70,20 +59,47 @@ app.post('/videos', (req, res) => {
         err.errorsMessages[0].field = "availableResolutions";
         resCheckErr.push(err);
     }
+    /*if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40) || typeof req.body.title === null ) {
+        err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null"
+        err.errorsMessages[0].field = "title"
+        resCheckErr.push(err)
+    }
+
+    if (typeof req.body.title !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
+        err.errorsMessages[0].message = "title must be a string and incorrect resolution"
+        err.errorsMessages[0].field = "title & availableResolutions"
+        resCheckErr.push(err)
+    }
+    if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20) || typeof req.body.author === null) {
+        err.errorsMessages[0].message = "author must be a string or length > 20 or null "
+        err.errorsMessages[0].field = "author "
+        resCheckErr.push(err)
+    }
+    if (typeof req.body.author === null) {
+        err.errorsMessages[0].message = "author  null"
+        err.errorsMessages[0].field = "author"
+        resCheckErr.push(err)
+    }
+
+    if (filterPostResolutions.length !== req.body.availableResolutions.length) {
+        err.errorsMessages[0].message = "incorrect resolution"
+        err.errorsMessages[0].field = "availableResolutions"
+        resCheckErr.push(err)
+    }
     if (typeof req.body.author !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "author must be a string and incorrect resolution";
-        err.errorsMessages[0].field = "author & availableResolutions";
-        resCheckErr.push(err);
+        err.errorsMessages[0].message = "author must be a string and incorrect resolution"
+        err.errorsMessages[0].field = "author & availableResolutions"
+        resCheckErr.push(err)
     }
     if (typeof req.body.title !== 'string' && typeof req.body.author !== 'string') {
-        err.errorsMessages[0].message = "title & author must be a string ";
-        err.errorsMessages[0].field = "title & author";
-        resCheckErr.push(err);
+        err.errorsMessages[0].message = "title & author must be a string "
+        err.errorsMessages[0].field = "title & author"
+        resCheckErr.push(err)
     }
     if (typeof req.body.title !== 'string' && typeof req.body.author !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title & author must be a string and incorrect resolution";
-        err.errorsMessages[0].field = "title & author & availableResolutions";
-        resCheckErr.push(err);
+        err.errorsMessages[0].message = "title & author must be a string and incorrect resolution"
+        err.errorsMessages[0].field = "title & author & availableResolutions"
+        resCheckErr.push(err)
     }
     /*if ((req.body.title).length > 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
         err.errorsMessages[0].message = "more than 40 characters in title"
@@ -117,7 +133,6 @@ app.post('/videos', (req, res) => {
     }*/
     if (resCheckErr.length > 0) {
         res.status(400).send(resCheckErr);
-        resCheckErr = [];
         return;
     }
 });
