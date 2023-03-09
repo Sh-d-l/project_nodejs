@@ -16,7 +16,8 @@ type VideoType = {
         availableResolutions: string[]
 }
 const arrResolutionVideo = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-let resCheckErr:Array<object> =[];
+const resCheckErr:Array<errType> = [];
+
 type errType =
         {
             message: string,
@@ -61,12 +62,12 @@ app.post('/videos', (req,res) => {
 
     if(typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40)) {
         err.message = "title must be a string or length > 20 or null ";
-        err.field = "title ";
+        err.field = "title";
         resCheckErr.push(err);
     }
     if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
         err.message = "author must be a string or length > 20 or null ";
-        err.field = "author ";
+        err.field = "author";
         resCheckErr.push(err);
     }
     if (filterPostResolutions.length !== req.body.availableResolutions.length) {
@@ -78,81 +79,6 @@ app.post('/videos', (req,res) => {
         res.status(400).send({"errorsMessages": resCheckErr})
         return;
     }
-
-
-
-    /*if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40) || typeof req.body.title === null ) {
-        err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null"
-        err.errorsMessages[0].field = "title"
-        resCheckErr.push(err)
-    }
-
-    if (typeof req.body.title !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title must be a string and incorrect resolution"
-        err.errorsMessages[0].field = "title & availableResolutions"
-        resCheckErr.push(err)
-    }
-    if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20) || typeof req.body.author === null) {
-        err.errorsMessages[0].message = "author must be a string or length > 20 or null "
-        err.errorsMessages[0].field = "author "
-        resCheckErr.push(err)
-    }
-    if (typeof req.body.author === null) {
-        err.errorsMessages[0].message = "author  null"
-        err.errorsMessages[0].field = "author"
-        resCheckErr.push(err)
-    }
-
-    if (filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "incorrect resolution"
-        err.errorsMessages[0].field = "availableResolutions"
-        resCheckErr.push(err)
-    }
-    if (typeof req.body.author !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "author must be a string and incorrect resolution"
-        err.errorsMessages[0].field = "author & availableResolutions"
-        resCheckErr.push(err)
-    }
-    if (typeof req.body.title !== 'string' && typeof req.body.author !== 'string') {
-        err.errorsMessages[0].message = "title & author must be a string "
-        err.errorsMessages[0].field = "title & author"
-        resCheckErr.push(err)
-    }
-    if (typeof req.body.title !== 'string' && typeof req.body.author !== 'string' && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title & author must be a string and incorrect resolution"
-        err.errorsMessages[0].field = "title & author & availableResolutions"
-        resCheckErr.push(err)
-    }
-    /*if ((req.body.title).length > 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "more than 40 characters in title"
-        err.errorsMessages[0].field = "title"
-        resCheckErr.push(err)
-    }*/
-    /*if ((req.body.title).length <= 40 && (req.body.author).length > 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "more than 20 characters in author"
-        err.errorsMessages[0].field = "author"
-        resCheckErr.push(err)
-    }
-    if ((req.body.title).length <= 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "incorrect resolution"
-        err.errorsMessages[0].field = "availableResolutions"
-        resCheckErr.push(err)
-    }
-    if ((req.body.title).length > 40 && (req.body.author).length >20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title > 40 characters and author > 20 characters"
-        err.errorsMessages[0].field = "title & author"
-        resCheckErr.push(err)
-    }
-    if ((req.body.title).length > 40 && (req.body.author).length <= 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "title > 40 characters and incorrect resolution"
-        err.errorsMessages[0].field = "title & availableResolutions"
-        resCheckErr.push(err)
-    }
-    if ((req.body.title).length <= 40 && (req.body.author).length > 20 && filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "author > 20 characters and incorrect resolution"
-        err.errorsMessages[0].field = "author & availableResolutions"
-        resCheckErr.push(err)
-    }*/
 })
 
 /*------------------------------GET ALL VIDEOS-----------------------------*/
@@ -189,8 +115,8 @@ app.put ('/videos/:id', (req,res) => {
                 obj.title = req.body.title;
                 obj.author = req.body.author;
                 obj.availableResolutions = req.body.availableResolutions;
-                obj.canBeDownloaded = true;
-                obj.minAgeRestriction = 18;
+                obj.canBeDownloaded = req.body.canBeDownloaded;
+                obj.minAgeRestriction = req.body.minAgeRestriction;
                 obj.publicationDate = new Date().toISOString();
                 res.sendStatus(204)
                 return;
