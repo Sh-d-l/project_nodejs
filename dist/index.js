@@ -151,23 +151,21 @@ app.get('/videos/:id', (req, res) => {
 /*------------------------------PUT----------------------------------------------------*/
 app.put('/videos/:id', (req, res) => {
     let filterResolutions = req.body.availableResolutions.filter((el) => arrResolutionVideo.includes(el));
-    if (typeof req.body.title === "string" && typeof req.body.author === "string"
+    /*if (typeof req.body.title === "string" && typeof req.body.author === "string"
         && (req.body.title).length <= 40 && (req.body.author).length <= 20 && filterResolutions.length === (req.body.availableResolutions).length &&
-        req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof req.body.publicationDate !== "string") {
-        for (let obj of videos) {
-            if (obj.id === +req.params.id) {
-                obj.title = req.body.title;
-                obj.author = req.body.author;
-                obj.availableResolutions = req.body.availableResolutions;
-                obj.canBeDownloaded = true;
-                obj.minAgeRestriction = 18;
-                obj.publicationDate = new Date().toISOString();
-                res.status(204).send(videos);
-                return;
-            }
+        req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof
+        req.body.publicationDate !== "string") {*/
+    for (let obj of videos) {
+        if (obj.id === +req.params.id) {
+            obj.title = req.body.title;
+            obj.author = req.body.author;
+            obj.availableResolutions = req.body.availableResolutions;
+            obj.canBeDownloaded = true;
+            obj.minAgeRestriction = 18;
+            obj.publicationDate = new Date().toISOString();
+            res.sendStatus(204);
+            return;
         }
-        res.sendStatus(404);
-        return;
     }
     if (typeof req.body.title !== "string" || (req.body.title).length > 40) {
         err.message = "title must be a string or length < 40";

@@ -179,10 +179,12 @@ app.get ('/videos/:id', (req,res) => {
 app.put ('/videos/:id', (req,res) => {
     let filterResolutions = req.body.availableResolutions.filter((el:string) =>  arrResolutionVideo.includes(el))
 
-    if (typeof req.body.title === "string" && typeof req.body.author === "string"
+    /*if (typeof req.body.title === "string" && typeof req.body.author === "string"
         && (req.body.title).length <= 40 && (req.body.author).length <= 20 && filterResolutions.length === (req.body.availableResolutions).length &&
         req.body.canBeDownloaded == true && typeof req.body.minAgeRestriction !== "number" && req.body.minAgeRestriction >= 1 && req.body.minAgeRestriction <= 18 && typeof
-        req.body.publicationDate !== "string") {
+        req.body.publicationDate !== "string") {*/
+
+
         for (let obj of videos) {
             if (obj.id === +req.params.id) {
                 obj.title = req.body.title;
@@ -191,13 +193,11 @@ app.put ('/videos/:id', (req,res) => {
                 obj.canBeDownloaded = true;
                 obj.minAgeRestriction = 18;
                 obj.publicationDate = new Date().toISOString();
-                res.status(204).send(videos)
+                res.sendStatus(204)
                 return;
             }
         }
-        res.sendStatus(404)
-        return;
-    }
+
     if(typeof req.body.title !== "string" || (req.body.title).length >  40) {
         err.message = "title must be a string or length < 40"
         err.field = "title"
