@@ -16,22 +16,18 @@ type VideoType = {
         availableResolutions: string[]
 }
 const arrResolutionVideo = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-let resCheckErr:errType[] =[];
-type errType = {
-    "errorsMessages": [
+let resCheckErr:Array<object> =[];
+type errType =
         {
             message: string,
             field: string,
         }
-    ]
-}
-let err:errType = {
-    "errorsMessages": [        {
-            "message": "string",
-            "field": "string",
-        }
-    ]
-}
+
+let err:errType =
+        {
+            message: "string",
+            field: "string",
+        };
 
 /*----------------------------POST-----------------------------------*/
 
@@ -64,20 +60,26 @@ app.post('/videos', (req,res) => {
     }
 
     if(typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40)) {
-        err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null";
-        err.errorsMessages[0].field = "title";
+        err.message = "title must be a string or length > 20 or null ";
+        err.field = "title ";
         resCheckErr.push(err);
     }
     if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
-        err.errorsMessages[0].message = "author must be a string or length > 20 or null ";
-        err.errorsMessages[0].field = "author ";
+        err.message = "author must be a string or length > 20 or null ";
+        err.field = "author ";
         resCheckErr.push(err);
     }
     if (filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages[0].message = "incorrect resolution";
-        err.errorsMessages[0].field = "availableResolutions";
+        err.message = "incorrect resolution";
+        err.field = "availableResolutions";
         resCheckErr.push(err);
     }
+    if (resCheckErr.length > 0) {
+        res.status(400).send({"errorsMessages": resCheckErr})
+        return;
+    }
+
+
 
     /*if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40) || typeof req.body.title === null ) {
         err.errorsMessages[0].message = "title must be a string or length > 40 ch. or null"
@@ -151,11 +153,6 @@ app.post('/videos', (req,res) => {
         err.errorsMessages[0].field = "author & availableResolutions"
         resCheckErr.push(err)
     }*/
-
-    if (resCheckErr.length > 0) {
-        res.status(400).send(resCheckErr)
-        return;
-    }
 })
 
 /*------------------------------GET ALL VIDEOS-----------------------------*/
@@ -201,43 +198,40 @@ app.put ('/videos/:id', (req,res) => {
         res.sendStatus(404)
         return;
     }
-
-
-
     if(typeof req.body.title !== "string" || (req.body.title).length >  40) {
-        err.errorsMessages[0].message = "title must be a string or length < 40"
-        err.errorsMessages[0].field = "title"
+        err.message = "title must be a string or length < 40"
+        err.field = "title"
         resCheckErr.push(err)
     }
     if (typeof req.body.author !== "string" || (req.body.author).length > 20) {
-        err.errorsMessages[0].message = "author must be a string or length < 20"
-        err.errorsMessages[0].field = "author"
+        err.message = "author must be a string or length < 20"
+        err.field = "author"
         resCheckErr.push(err)
     }
     if(filterResolutions.length !== (req.body.availableResolutions).length) {
-        err.errorsMessages[0].message = "incorrect resolutions"
-        err.errorsMessages[0].field = "availableResolutions"
+        err.message = "incorrect resolutions"
+        err.field = "availableResolutions"
         resCheckErr.push(err)
     }
     if (req.body.canBeDownloaded !== true) {
-        err.errorsMessages[0].message = "canBeDownloaded not true"
-        err.errorsMessages[0].field = "canBeDownloaded"
+        err.message = "canBeDownloaded not true"
+        err.field = "canBeDownloaded"
         resCheckErr.push(err)
     }
     if(typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
-        err.errorsMessages[0].message = "minAgeRestriction must have a number type and 1 < minAgeRestriction < 18"
-        err.errorsMessages[0].field = "minAgeRestriction"
+        err.message = "minAgeRestriction must have a number type and 1 < minAgeRestriction < 18"
+        err.field = "minAgeRestriction"
         resCheckErr.push(err)
     }
 
     if(typeof req.body.publicationDate !== "string")   {
-        err.errorsMessages[0].message = "publicationDate must have a string"
-        err.errorsMessages[0].field = "publicationDate"
+        err.message = "publicationDate must have a string"
+        err.field = "publicationDate"
         resCheckErr.push(err)
 
     }
     if(resCheckErr.length > 0) {
-        res.status(400).send(resCheckErr)
+        res.status(400).send({"errorsMessages":resCheckErr})
         return;
     }
     else {
