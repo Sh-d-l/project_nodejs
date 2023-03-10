@@ -10,12 +10,8 @@ app.use(express_1.default.json());
 const port = 3000;
 const videos = [];
 const arrResolutionVideo = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-const resCheckErrPost = [];
-const resCheckErrPut = [];
-let count = 0;
 const err = {
-    message: "string",
-    field: "string",
+    errorsMessages: []
 };
 /*----------------------------POST-----------------------------------*/
 app.post('/videos', (req, res) => {
@@ -44,22 +40,16 @@ app.post('/videos', (req, res) => {
         }
     }
     if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40)) {
-        err.message = "title must be a string or length > 20 or null ";
-        err.field = "title";
-        resCheckErrPost.push(err);
+        err.errorsMessages.push({ message: "no string or > 40", field: "title" });
     }
     if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
-        err.message = "author must be a string or length > 20 or null ";
-        err.field = "author";
-        resCheckErrPost.push(err);
+        err.errorsMessages.push({ message: "no string or > 40", field: "author" });
     }
     if (filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.message = "incorrect resolution";
-        err.field = "availableResolutions";
-        resCheckErrPost.push(err);
+        err.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
     }
-    if (resCheckErrPost.length > 0) {
-        res.status(400).send({ "errorsMessages": resCheckErrPost });
+    if (err.errorsMessages.length > 0) {
+        res.status(400).send(err);
         return;
     }
 });
@@ -82,52 +72,44 @@ app.get('/videos/:id', (req, res) => {
 app.put('/videos/:id', (req, res) => {
     let filterResolutions = req.body.availableResolutions.filter((el) => arrResolutionVideo.includes(el));
     if (typeof req.body.title !== "string" || (req.body.title).length > 40) {
-        err.message = "title must be a string or length < 40";
-        err.field = "title";
-        resCheckErrPut.push(err);
+        err.errorsMessages.push({ message: "no string or > 40", field: "title" });
     }
     if (typeof req.body.author !== "string" || (req.body.author).length > 20) {
-        err.message = "author must be a string or length < 20";
-        err.field = "author";
-        resCheckErrPut.push(err);
+        err.errorsMessages.push({ message: "no string or > 40", field: "author" });
     }
     if (filterResolutions.length !== (req.body.availableResolutions).length) {
-        err.message = "incorrect resolutions";
-        err.field = "availableResolutions";
-        resCheckErrPut.push(err);
+        err.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
     }
     if (typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
-        err.message = "minAgeRestriction must have a number type and 1 < minAgeRestriction < 18";
-        err.field = "minAgeRestriction";
-        resCheckErrPut.push(err);
+        err.errorsMessages.push({ message: "not number or <1 or > 18", field: "minAgeRestriction" });
     }
     if (typeof req.body.publicationDate !== "string") {
-        err.message = "publicationDate must have a string";
-        err.field = "publicationDate";
-        resCheckErrPut.push(err);
+        err.errorsMessages.push({ message: "not string", field: "publicationDate" });
     }
-    if (resCheckErrPut.length > 0) {
-        res.status(400).send({ "errorsMessages": resCheckErrPut });
+    if (err.errorsMessages.length > 0) {
+        res.status(400).send(err);
         return;
     }
-    else {
-        res.sendStatus(404);
-        return;
+    for (let obj of videos) {
+        if (obj.id === +req.params.id) {
+            obj.title = req.body.title;
+            obj.author = req.body.author;
+            obj.availableResolutions = req.body.availableResolutions;
+            obj.canBeDownloaded = req.body.canBeDownloaded;
+            obj.minAgeRestriction = req.body.minAgeRestriction;
+            obj.publicationDate = new Date().toISOString();
+            res.sendStatus(204);
+            return;
+        }
     }
-    /*
-            for (let obj of videos) {
-                if (obj.id === +req.params.id) {
-                    obj.title = req.body.title;
-                    obj.author = req.body.author;
-                    obj.availableResolutions = req.body.availableResolutions;
-                    obj.canBeDownloaded = req.body.canBeDownloaded;
-                    obj.minAgeRestriction = req.body.minAgeRestriction;
-                    obj.publicationDate = new Date().toISOString();
-    
-                }
-            }
-            res.sendStatus(204)
-            return;*/
+    /* else {
+         res.sendStatus(404)
+         return;
+     }
+ 
+ /*
+ 
+         return;*/
 });
 /*-----------------------------DELETE ID-------------------------------------------------*/
 app.delete('/videos/:id', (req, res) => {
