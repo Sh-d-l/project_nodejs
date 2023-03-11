@@ -98,6 +98,7 @@ app.put('/videos/:id', (req, res) => {
         errPut.errorsMessages.splice(0, errPut.errorsMessages.length);
         return;
     }
+    let total = 0;
     for (let obj of videos) {
         if (obj.id === +req.params.id) {
             obj.title = req.body.title;
@@ -107,17 +108,14 @@ app.put('/videos/:id', (req, res) => {
             obj.minAgeRestriction = req.body.minAgeRestriction;
             obj.publicationDate = new Date().toISOString();
             res.sendStatus(204);
+            total += 1;
             return;
         }
     }
-    /* else {
-         res.sendStatus(404)
-         return;
-     }
- 
- /*
- 
-         return;*/
+    if (total == 0) {
+        res.sendStatus(404);
+        return;
+    }
 });
 /*-----------------------------DELETE ID-------------------------------------------------*/
 app.delete('/videos/:id', (req, res) => {

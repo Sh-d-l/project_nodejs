@@ -53,7 +53,7 @@ app.post('/videos', (req,res) => {
         }
     }
     if(typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40)) {
-        errPost.errorsMessages.push({message: "no string or > 40", field: "title"})
+        errPost.errorsMessages.push({ message: "no string or > 40", field: "title"})
     }
     if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
         errPost.errorsMessages.push({message: "no string or > 40", field: "author"})
@@ -113,6 +113,7 @@ app.put ('/videos/:id', (req,res) => {
         errPut.errorsMessages.splice(0,errPut.errorsMessages.length)
         return;
     }
+    let total:number = 0;
         for (let obj of videos) {
         if (obj.id === +req.params.id) {
             obj.title = req.body.title;
@@ -122,21 +123,14 @@ app.put ('/videos/:id', (req,res) => {
             obj.minAgeRestriction = req.body.minAgeRestriction;
             obj.publicationDate = new Date().toISOString();
             res.sendStatus(204)
+            total += 1;
             return;
         }
-
     }
-
-
-   /* else {
-        res.sendStatus(404)
-        return;
-    }
-
-/*
-
-        return;*/
-
+        if(total == 0) {
+            res.sendStatus(404)
+            return;
+        }
 })
 
 /*-----------------------------DELETE ID-------------------------------------------------*/
