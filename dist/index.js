@@ -53,7 +53,7 @@ app.post('/videos', (req, res) => {
     }
     if (errPost.errorsMessages.length > 0) {
         res.status(400).send(errPost);
-        errPost.errorsMessages.splice(0, errPost.errorsMessages.length);
+        //errPost.errorsMessages.splice(0,errPost.errorsMessages.length)
         return;
     }
 });
@@ -95,7 +95,7 @@ app.put('/videos/:id', (req, res) => {
     }
     if (errPut.errorsMessages.length > 0) {
         res.status(400).send(errPut);
-        errPut.errorsMessages.splice(0, errPut.errorsMessages.length);
+        //errPut.errorsMessages.splice(0,errPut.errorsMessages.length)
         return;
     }
     let total = 0;
