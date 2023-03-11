@@ -48,8 +48,8 @@ app.post('/videos', (req, res) => {
     if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
         errPost.errorsMessages.push({ message: "no string or > 40", field: "author" });
     }
-    if (filterPostResolutions.length !== req.body.availableResolutions.length) {
-        errPost.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
+    if (filterPostResolutions.length !== (req.body.availableResolutions).length) {
+        errPost.errorsMessages.push({ message: "incorrect resolution", field: "availableResolutions" });
     }
     if (errPost.errorsMessages.length > 0) {
         res.status(400).send(errPost);
@@ -99,6 +99,7 @@ app.put('/videos/:id', (req, res) => {
         return;
     }
     let total = 0;
+    const time = new Date();
     for (let obj of videos) {
         if (obj.id === +req.params.id) {
             obj.title = req.body.title;
@@ -106,7 +107,7 @@ app.put('/videos/:id', (req, res) => {
             obj.availableResolutions = req.body.availableResolutions;
             obj.canBeDownloaded = req.body.canBeDownloaded;
             obj.minAgeRestriction = req.body.minAgeRestriction;
-            obj.publicationDate = new Date().toISOString();
+            obj.publicationDate = req.body.publicationDate;
             res.sendStatus(204);
             total += 1;
             return;
