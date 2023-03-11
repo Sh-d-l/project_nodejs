@@ -87,6 +87,9 @@ app.put('/videos/:id', (req, res) => {
     if (typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
         errPut.errorsMessages.push({ message: "not number or <1 or > 18", field: "minAgeRestriction" });
     }
+    if (req.body.canBeDownloaded == false) {
+        errPut.errorsMessages.push({ message: "must be a true", field: "canBeDownloaded" });
+    }
     if (typeof req.body.publicationDate !== "string") {
         errPut.errorsMessages.push({ message: "not string", field: "publicationDate" });
     }
