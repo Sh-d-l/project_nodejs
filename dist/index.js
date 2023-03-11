@@ -10,7 +10,10 @@ app.use(express_1.default.json());
 const port = 3000;
 const videos = [];
 const arrResolutionVideo = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-const err = {
+const errPost = {
+    errorsMessages: []
+};
+const errPut = {
     errorsMessages: []
 };
 /*----------------------------POST-----------------------------------*/
@@ -40,16 +43,17 @@ app.post('/videos', (req, res) => {
         }
     }
     if (typeof req.body.title !== 'string' || (typeof req.body.title == 'string' && (req.body.title).length > 40)) {
-        err.errorsMessages.push({ message: "no string or > 40", field: "title" });
+        errPost.errorsMessages.push({ message: "no string or > 40", field: "title" });
     }
     if (typeof req.body.author !== 'string' || (typeof req.body.author == 'string' && (req.body.author).length > 20)) {
-        err.errorsMessages.push({ message: "no string or > 40", field: "author" });
+        errPost.errorsMessages.push({ message: "no string or > 40", field: "author" });
     }
     if (filterPostResolutions.length !== req.body.availableResolutions.length) {
-        err.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
+        errPost.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
     }
-    if (err.errorsMessages.length > 0) {
-        res.status(400).send(err);
+    if (errPost.errorsMessages.length > 0) {
+        res.status(400).send(errPost);
+        errPost.errorsMessages.splice(0, errPost.errorsMessages.length);
         return;
     }
 });
@@ -72,22 +76,23 @@ app.get('/videos/:id', (req, res) => {
 app.put('/videos/:id', (req, res) => {
     let filterResolutions = req.body.availableResolutions.filter((el) => arrResolutionVideo.includes(el));
     if (typeof req.body.title !== "string" || (req.body.title).length > 40) {
-        err.errorsMessages.push({ message: "no string or > 40", field: "title" });
+        errPut.errorsMessages.push({ message: "no string or > 40", field: "title" });
     }
     if (typeof req.body.author !== "string" || (req.body.author).length > 20) {
-        err.errorsMessages.push({ message: "no string or > 40", field: "author" });
+        errPut.errorsMessages.push({ message: "no string or > 40", field: "author" });
     }
     if (filterResolutions.length !== (req.body.availableResolutions).length) {
-        err.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
+        errPut.errorsMessages.push({ message: "incorrect resolution", field: "availableResolution" });
     }
     if (typeof req.body.minAgeRestriction !== "number" || req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
-        err.errorsMessages.push({ message: "not number or <1 or > 18", field: "minAgeRestriction" });
+        errPut.errorsMessages.push({ message: "not number or <1 or > 18", field: "minAgeRestriction" });
     }
     if (typeof req.body.publicationDate !== "string") {
-        err.errorsMessages.push({ message: "not string", field: "publicationDate" });
+        errPut.errorsMessages.push({ message: "not string", field: "publicationDate" });
     }
-    if (err.errorsMessages.length > 0) {
-        res.status(400).send(err);
+    if (errPut.errorsMessages.length > 0) {
+        res.status(400).send(errPut);
+        errPut.errorsMessages.splice(0, errPut.errorsMessages.length);
         return;
     }
     for (let obj of videos) {
